@@ -1,0 +1,13 @@
+name: Release
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  workflow_dispatch:
+
+jobs:
+  release:
+    uses: tastyworks/shared-github-workflows/.github/workflows/release.yml@Initial
+    secrets: inherit

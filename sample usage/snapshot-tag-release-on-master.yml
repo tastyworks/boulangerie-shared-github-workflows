@@ -1,0 +1,16 @@
+name: snapshot tag release on master
+
+concurrency:
+  group: ci-master
+  cancel-in-progress: true
+
+on:
+  push:
+    branches:
+      - 'master'
+      - '*.x'
+
+jobs:
+  snapshot-tag-release:
+    uses: tastyworks/shared-github-workflows/.github/workflows/shared-snapshot-tag-release-on-master.yml@Initial
+    secrets: inherit

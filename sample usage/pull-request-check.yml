@@ -1,0 +1,20 @@
+name: Pull Request Check
+
+concurrency:
+  group: pull-request-check-${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  pull_request:
+    types:
+      # defaults
+      - opened
+      - reopened
+      - synchronize
+      # add transition from draft to ready_for_review
+      - ready_for_review
+
+jobs:
+  check:
+    uses: tastyworks/shared-github-workflows/.github/workflows/pull-request-check.yml@Initial
+    secrets: inherit
