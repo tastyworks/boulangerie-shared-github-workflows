@@ -1,0 +1,36 @@
+name: setup
+
+inputs:
+  GH_ACCESS_TOKEN:
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+      with:
+        token: ${{ secrets.GH_ACCESS_TOKEN }}
+        path: project
+
+    - name: Clone gradle-scripts
+      uses: actions/checkout@v3
+      with:
+        repository: tastyworks/gradle-scripts
+        ref: 'RefactorBoulangerieReleaseProcess'
+        token: ${{ secrets.GH_ACCESS_TOKEN }}
+        path: gradle-scripts
+
+    - name: Read .java-version
+      run: |
+        echo "JAVA_VERSION=$(cat project/.java-version)" >> $GITHUB_ENV
+
+    - name: Setup JDK
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'
+        java-version: ${{ env.JAVA_VERSION }}
+
+    - name: Setup Gradle
+      uses: gradle/gradle-build-action@v2
+
