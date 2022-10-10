@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: ./.github/common-setup
+      - uses: tastyworks/boulangerie-shared-github-workflows/.github/common-setup@main
         with:
           GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
 
