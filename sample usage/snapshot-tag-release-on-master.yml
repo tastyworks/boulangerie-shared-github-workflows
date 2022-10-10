@@ -8,9 +8,10 @@ on:
   push:
     branches:
       - 'master'
+      - 'main'
       - '*.x'
 
 jobs:
   snapshot-tag-release:
-    uses: tastyworks/shared-github-workflows/.github/workflows/shared-snapshot-tag-release-on-master.yml@Initial
+    uses: tastyworks/shared-github-workflows/.github/workflows/snapshot-tag-release-on-master.yml@main
     secrets: inherit
