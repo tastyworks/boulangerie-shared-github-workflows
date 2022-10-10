@@ -13,5 +13,5 @@ on:
 
 jobs:
   snapshot-tag-release:
-    uses: tastyworks/shared-github-workflows/.github/workflows/snapshot-tag-release-on-master.yml@main
+    uses: tastyworks/boulangerie-shared-github-workflows/.github/workflows/snapshot-tag-release-on-master.yml@main
     secrets: inherit
