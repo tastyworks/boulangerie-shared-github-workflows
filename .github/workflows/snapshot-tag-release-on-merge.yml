@@ -1,7 +1,7 @@
-name: Snapshot Tag Release On Master
+name: Snapshot Tag Release On Merge
 
 concurrency:
-  group: snapshot-tag-release-on-master
+  group: snapshot-tag-release-on-merge
   cancel-in-progress: true
 
 on:
@@ -15,7 +15,7 @@ on:
         required: true
 
 jobs:
-  snapshot-tag-release-on-master:
+  snapshot-tag-release-on-merge:
     runs-on: ubuntu-latest
 
     steps:

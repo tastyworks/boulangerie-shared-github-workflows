@@ -1,4 +1,4 @@
-name: snapshot tag release on merge
+name: Snapshot Tag Release on Merge
 
 concurrency:
   group: ci-snapshot-tag-relese-on-merge
