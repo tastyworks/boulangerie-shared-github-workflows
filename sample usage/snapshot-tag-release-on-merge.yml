@@ -1,0 +1,17 @@
+name: snapshot tag release on merge
+
+concurrency:
+  group: ci-snapshot-tag-relese-on-merge
+  cancel-in-progress: true
+
+on:
+  push:
+    branches:
+      - 'master'
+      - 'main'
+      - '*.x'
+
+jobs:
+  snapshot-tag-release:
+    uses: tastyworks/boulangerie-shared-github-workflows/.github/workflows/snapshot-tag-release-on-merge.yml@main
+    secrets: inherit
