@@ -1,7 +1,9 @@
 name: setup
+description: setup for boulangerie java workflows
 
 inputs:
   GH_ACCESS_TOKEN:
+    description: Github Access Token
     required: true
 
 runs:
