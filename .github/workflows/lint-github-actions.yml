@@ -1,0 +1,31 @@
+name: Lint Github Action YAML files
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+      - main
+  pull_request:
+    branches:
+      - master
+      - main
+    paths:
+      - '.github/**/*.yml'
+      - 'sample usage/**/*.yml'
+
+jobs:
+  lint-github-actions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install action-validator
+        uses: asdf-vm/actions/install@v1
+        with:
+          tool_versions: |
+            action-validator 0.3.0
+
+      - name: Lint
+        run: |
+          find . -type f -iname \*.yml | xargs -I {} action-validator --verbose {}
