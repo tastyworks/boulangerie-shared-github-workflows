@@ -1,4 +1,5 @@
 name: Release
+run-name: On ${{ github.ref_name }}
 
 concurrency:
   group: release-${{ github.ref }}
