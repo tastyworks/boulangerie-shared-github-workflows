@@ -5,6 +5,10 @@ inputs:
   GH_ACCESS_TOKEN:
     description: Github Access Token
     required: true
+  JAVA_DISTRIBUTION:
+    description: 'https://github.com/actions/setup-java#supported-distributions'
+    required: false
+    default: 'temurin'
 
 runs:
   using: 'composite'
@@ -30,7 +34,7 @@ runs:
     - name: Setup JDK
       uses: actions/setup-java@v3
       with:
-        distribution: 'temurin'
+        distribution: ${{ inputs.JAVA_DISTRIBUTION }}
         java-version: ${{ env.JAVA_VERSION }}
 
     - name: Setup Gradle
