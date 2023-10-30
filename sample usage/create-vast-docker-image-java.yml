@@ -1,0 +1,17 @@
+name: Create VAST Docker Image Java
+run-name: On ${{ github.ref_name }}
+
+concurrency:
+  group: create-vast-docker-image-java-${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  create:
+    tags:
+      - "[0-9]+.[0-9]+.[0-9]+"
+
+jobs:
+  create-vast-docker-image:
+    uses: tastyworks/boulangerie-shared-github-workflows/.github/workflows/create-vast-docker-image-java.yml@maim
+    secrets: inherit
+
