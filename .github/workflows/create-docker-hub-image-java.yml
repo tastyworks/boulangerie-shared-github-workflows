@@ -15,7 +15,34 @@ on:
         required: true
 
 jobs:
+  should-continue:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check if ref is a tag and not a snapshot
+        id: check
+        run: |
+          echo "IS_TAG=false" >> $GITHUB_ENV
+          echo "IS_NOT_SNAPSHOT=false" >> $GITHUB_ENV
+          if [[ "${{ github.ref }}" == refs/tags/* ]]; then
+            echo "IS_TAG=true" >> $GITHUB_ENV
+          fi
+          if [[ "${{ github.ref_name }}" != *"-SNAPSHOT" ]]; then
+            echo "IS_NOT_SNAPSHOT=true" >> $GITHUB_ENV
+          fi
+      - name: Set output
+        id: output
+        run: |
+          if [[ "${{ env.IS_TAG }}" == "true" && "${{ env.IS_NOT_SNAPSHOT }}" == "true" ]]; then
+            echo "should-continue=true" >> $GITHUB_ENV
+          else
+            echo "should-continue=false" >> $GITHUB_ENV
+          fi
+    outputs:
+      should-continue: ${{ env.should-continue }}
+
   push_to_docker_hub:
+    needs: should-continue
+    if: ${{ needs.should-continue.outputs.should-continue == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - uses: tastyworks/boulangerie-shared-github-workflows/.github/common-setup@main
