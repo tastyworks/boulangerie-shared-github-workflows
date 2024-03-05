@@ -9,6 +9,10 @@ inputs:
     description: 'https://github.com/actions/setup-java#supported-distributions'
     required: false
     default: 'temurin'
+  GRADLE_SCRIPTS_PATH:
+    description: 'Path to clone gradle-scripts into'
+    required: false
+    default: 'gradle-scripts'
 
 runs:
   using: 'composite'
@@ -24,7 +28,7 @@ runs:
       with:
         repository: tastyworks/gradle-scripts
         token: ${{ inputs.GH_ACCESS_TOKEN }}
-        path: gradle-scripts
+        path: ${{ inputs.GRADLE_SCRIPTS_PATH }}
 
     - name: Read .java-version
       shell: bash
