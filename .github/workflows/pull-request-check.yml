@@ -2,6 +2,12 @@ name: Pull Request Check
 
 on:
   workflow_call:
+    inputs:
+      GRADLE_SCRIPTS_PATH:
+        description: 'Path to clone gradle-scripts into'
+        type: string
+        required: false
+        default: 'gradle-scripts'
     secrets:
       GH_ACCESS_TOKEN:
         required: true
@@ -18,6 +24,7 @@ jobs:
       - uses: tastyworks/boulangerie-shared-github-workflows/.github/common-setup@main
         with:
           GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
+          GRADLE_SCRIPTS_PATH: ${{ inputs.GRADLE_SCRIPTS_PATH }}
 
       - name: Gradle Check
         working-directory: ./project
