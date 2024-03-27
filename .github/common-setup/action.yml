@@ -22,6 +22,7 @@ runs:
       with:
         token: ${{ inputs.GH_ACCESS_TOKEN }}
         path: project
+        submodules: true
 
     - name: Clone gradle-scripts
       uses: actions/checkout@v4
