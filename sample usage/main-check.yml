@@ -1,0 +1,10 @@
+name: main check
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  check:
+    uses: tastyworks/boulangerie-shared-github-workflows/.github/workflows/check.yml@main
+    secrets: inherit

@@ -1,5 +1,4 @@
-# deprecated (use check.yml instead)
-name: Pull Request Check
+name: Check
 
 on:
   workflow_call:
