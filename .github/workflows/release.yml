@@ -15,14 +15,11 @@ on:
         default: ''
         required: false
         type: string
-      DOCKER_USER:
+      WITH_DOCKER:
         description: Docker user
         required: false
-        type: string
-      DOCKER_PASSWORD:
-        description: Docker password
-        required: false
-        type: string
+        type: boolean
+        default: false
 
 jobs:
   release:
@@ -32,8 +29,9 @@ jobs:
       - uses: tastyworks/boulangerie-shared-github-workflows/.github/common-setup@main
         with:
           GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
-          DOCKER_USER: ${{ inputs.DOCKER_USER }}
-          DOCKER_PASSWORD: ${{ inputs.DOCKER_PASSWORD }}
+          WITH_DOCKER: ${{ inputs.WITH_DOCKER }}
+          DOCKER_USER: ${{ secrets.DOCKER_HUB_VAST_USER }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_HUB_VAST_PASSWORD }}
 
       - name: Setup git config
         working-directory: ./project
