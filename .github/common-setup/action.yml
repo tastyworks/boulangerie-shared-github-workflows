@@ -13,6 +13,10 @@ inputs:
     description: 'Path to clone gradle-scripts into'
     required: false
     default: 'gradle-scripts'
+  WITH_DOCKER:
+    description: Whether or not to setup docker
+    required: false
+    default: 'false'
   DOCKER_USER:
     description: Docker user
     required: false
@@ -53,14 +57,14 @@ runs:
       uses: gradle/actions/setup-gradle@v3
 
     - name: Login to Docker Hub
-      if: ${{ inputs.DOCKER_USER != '' && inputs.DOCKER_PASSWORD != '' }}
+      if: ${{ inputs.WITH_DOCKER == 'true' }}
       uses: docker/login-action@v3
       with:
         username: ${{ inputs.DOCKER_USER }}
         password: ${{ inputs.DOCKER_PASSWORD }}
 
     - name: Set up QEMU
-      if: ${{ inputs.DOCKER_USER != '' && inputs.DOCKER_PASSWORD != '' }}
+      if: ${{ inputs.WITH_DOCKER == 'true' }}
       uses: docker/setup-qemu-action@v3
 
 
