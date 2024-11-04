@@ -8,6 +8,11 @@ on:
         type: string
         required: false
         default: 'gradle-scripts'
+      WITH_DOCKER:
+        description: Docker user
+        required: false
+        type: boolean
+        default: false
     secrets:
       GH_ACCESS_TOKEN:
         required: true
@@ -25,6 +30,9 @@ jobs:
         with:
           GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
           GRADLE_SCRIPTS_PATH: ${{ inputs.GRADLE_SCRIPTS_PATH }}
+          WITH_DOCKER: ${{ inputs.WITH_DOCKER }}
+          DOCKER_USER: ${{ secrets.DOCKER_HUB_VAST_USER }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_HUB_VAST_PASSWORD }}
 
       - name: Gradle Check
         working-directory: ./project
