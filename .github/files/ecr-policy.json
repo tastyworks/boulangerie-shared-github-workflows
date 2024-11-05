@@ -1,0 +1,19 @@
+{
+  "Version": "2008-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "lambda.amazonaws.com",
+        "AWS": [
+          "arn:aws:iam::338321748833:root",
+          "arn:aws:iam::071333662398:root"
+        ]
+      },
+      "Action": [
+        "ecr:BatchGetImage",
+        "ecr:GetDownloadUrlForLayer"
+      ]
+    }
+  ]
+}

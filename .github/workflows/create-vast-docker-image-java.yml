@@ -13,11 +13,30 @@ on:
         required: true
       VAST_ECR_PUBLISHER_SECRET:
         required: true
+    inputs:
+      ECR_REPOSITORY_NAME:
+        type: string
+        required: true
+      VERSION_TAG:
+        type: string
+        required: true
+      DOCKERFILE_LOCATION:
+        description: 'Path to directory containing the dockerfile'
+        type: string
+        required: false
+        default: '.'
+      DOCKERFILE_NAME:
+        type: string
+        required: false
+        default: 'Dockerfile'
+      PLATFORM:
+        type: string
+        required: false
+        default: 'linux/arm64'
 
 jobs:
   create-vast-docker-image-java:
     runs-on: ubuntu-latest
-
     steps:
       - uses: tastyworks/boulangerie-shared-github-workflows/.github/common-setup@main
         with:
@@ -32,13 +51,52 @@ jobs:
 
       - name: Login to ECR
         id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
+        uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Push to ECR
+      - name: Check out shared workflow repository
+        uses: actions/checkout@v3
+        with:
+          repository: tastyworks/boulangerie-shared-github-workflows
+          path: boulangerie-shared-github-workflows
+
+      - name: Create ECR repository if not exists
         working-directory: ./project
-        run: >
-          ./gradlew
-          -PAWS_MAVEN_ACCESS_KEY_ID=${{ secrets.AWS_MAVEN_ACCESS_KEY_ID }}
-          -PAWS_MAVEN_ACCESS_SECRET_KEY=${{ secrets.AWS_MAVEN_ACCESS_SECRET_KEY }}
-          dockerPush
+        run: |
+          export AWS_PAGER=""
+          export ECR_REPOSITORY_NAME="${{ inputs.ECR_REPOSITORY_NAME }}"
+          export ECR_REPOSITORY_URL="310588849096.dkr.ecr.us-east-2.amazonaws.com/${ECR_REPOSITORY_NAME}"
 
+          create_repository() {
+            aws ecr create-repository \
+              --repository-name "${ECR_REPOSITORY_NAME}" \
+              --image-scanning-configuration scanOnPush=true
+
+            aws ecr set-repository-policy --repository-name ${ECR_REPOSITORY_NAME} \
+              --policy-text file://boulangerie-shared-github-workflows/.github/files/ecr-policy.json
+
+            aws ecr put-lifecycle-policy --repository-name ${ECR_REPOSITORY_NAME} \
+              --lifecycle-policy-text file://boulangerie-shared-github-workflows/.github/files/ecr-lifecycle-policy.json
+          }
+
+          set +e
+          aws ecr describe-repositories --repository-names "${ECR_REPOSITORY_NAME}" || create_repository
+
+
+      - name: Docker build and push
+        working-directory: ./project
+        run: |
+          export ECR_REPOSITORY_NAME="${{ inputs.ECR_REPOSITORY_NAME }}"
+          export ECR_REPOSITORY_URL="310588849096.dkr.ecr.us-east-2.amazonaws.com/${ECR_REPOSITORY_NAME}"
+
+          export VERSION="${{ inputs.VERSION_TAG }}"
+          
+          cd ${{inputs.DOCKERFILE_LOCATION}}
+          docker build --platform linux/amd64 -t ${ECR_REPOSITORY_NAME}:${VERSION} \
+            -f ${{ inputs.DOCKERFILE_NAME }} \
+            --build-arg GITHUB_TOKEN=${{ secrets.GH_ACCESS_TOKEN }} \
+            --build-arg AWS_MAVEN_ACCESS_KEY_ID=${{ secrets.AWS_MAVEN_ACCESS_KEY_ID }} \
+            --build-arg AWS_MAVEN_ACCESS_SECRET_KEY=${{ secrets.AWS_MAVEN_ACCESS_SECRET_KEY }} \
+            .
+
+          docker tag ${ECR_REPOSITORY_NAME}:${VERSION} ${ECR_REPOSITORY_URL}:${VERSION}
+          docker push ${ECR_REPOSITORY_URL}:${VERSION}
