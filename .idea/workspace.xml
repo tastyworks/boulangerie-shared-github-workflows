@@ -5,8 +5,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="725ea7e3-21be-48ef-9479-404470057c89" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.github/workflows/ecr-lifecycle-policy.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.github/workflows/ecr-policy.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.github/workflows/create-vast-docker-image-java.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/create-vast-docker-image-java.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
@@ -37,7 +35,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "update-ecr-docker-workflow",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/Users/aaron.mamparo/dev/boulangerie-shared-github-workflows/.github/workflows",
     "node.js.detected.package.eslint": "true",
@@ -80,7 +78,7 @@
       <workItem from="1710355516096" duration="1556000" />
       <workItem from="1710447139243" duration="23000" />
       <workItem from="1730326712136" duration="431000" />
-      <workItem from="1730837135303" duration="1351000" />
+      <workItem from="1730837135303" duration="2867000" />
     </task>
     <servers />
   </component>

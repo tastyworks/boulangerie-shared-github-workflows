@@ -48,6 +48,13 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
+      - name: Check out shared workflow repository
+        uses: actions/checkout@v3
+        with:
+          repository: tastyworks/boulangerie-shared-github-workflows
+          path: boulangerie-shared-github-workflows
+          branch: update-ecr-docker-workflow
+
       - name: Create ECR repository if not exists
         working-directory: ./project
         run: |
@@ -61,10 +68,10 @@ jobs:
               --image-scanning-configuration scanOnPush=true
 
             aws ecr set-repository-policy --repository-name ${ECR_REPOSITORY_NAME} \
-              --policy-text file://.github/workflows/ecr-policy.json
+              --policy-text file://boulangerie-shared-github-workflows/.github/workflows/ecr-policy.json
 
             aws ecr put-lifecycle-policy --repository-name ${ECR_REPOSITORY_NAME} \
-              --lifecycle-policy-text file://.github/workflows/ecr-lifecycle-policy.json
+              --lifecycle-policy-text file://boulangerie-shared-github-workflows/.github/workflows/ecr-lifecycle-policy.json
           }
 
           set +e
