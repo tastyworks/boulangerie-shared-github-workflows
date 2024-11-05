@@ -53,7 +53,7 @@ jobs:
         with:
           repository: tastyworks/boulangerie-shared-github-workflows
           path: boulangerie-shared-github-workflows
-          branch: update-ecr-docker-workflow
+          ref: update-ecr-docker-workflow
 
       - name: Create ECR repository if not exists
         working-directory: ./project
