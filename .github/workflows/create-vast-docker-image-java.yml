@@ -93,7 +93,7 @@ jobs:
           
           cd ${{inputs.DOCKERFILE_LOCATION}}
           docker build --platform linux/amd64 -t ${ECR_REPOSITORY_NAME}:${VERSION} \
-            -f $${{ inputs.DOCKERFILE_NAME }} \
+            -f ${{ inputs.DOCKERFILE_NAME }} \
             --build-arg GITHUB_TOKEN=${{ secrets.GH_ACCESS_TOKEN }} \
             --build-arg AWS_MAVEN_ACCESS_KEY_ID=${{ secrets.AWS_MAVEN_ACCESS_KEY_ID }} \
             --build-arg AWS_MAVEN_ACCESS_SECRET_KEY=${{ secrets.AWS_MAVEN_ACCESS_SECRET_KEY }} \
