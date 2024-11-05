@@ -91,7 +91,7 @@ jobs:
 
           export VERSION="${{ inputs.VERSION_TAG }}"
           
-          cd {{inputs.DOCKERFILE_LOCATION}}
+          cd ${{inputs.DOCKERFILE_LOCATION}}
           docker build --platform linux/amd64 -t ${ECR_REPOSITORY_NAME}:${VERSION} \
             -f $${{ inputs.DOCKERFILE_NAME }} \
             --build-arg GITHUB_TOKEN=${{ secrets.GH_ACCESS_TOKEN }} \
