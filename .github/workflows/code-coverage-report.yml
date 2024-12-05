@@ -1,0 +1,43 @@
+name: Code coverage report
+
+on:
+  workflow_call:
+    secrets:
+      GH_ACCESS_TOKEN:
+        required: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: tastyworks/boulangerie-shared-github-workflows/.github/common-setup@main
+        with:
+          GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
+
+      - name: Gradle test
+        working-directory: ./project
+        run: ./gradlew testCoverage
+
+      # generates coverage-report.md and publishes as checkrun
+      - name: JaCoCo Code Coverage Report
+        id: jacoco_reporter
+        uses: PavanMudigonda/jacoco-reporter@v5.0
+        with:
+          coverage_results_path: ${{ github.workspace }}/project/build/reports/jacoco/testCoverage/testCoverage.xml
+          coverage_report_name: Coverage
+          coverage_report_title: JaCoCo
+          token: ${{ secrets.GH_ACCESS_TOKEN }}
+          skip_check_run: false
+          fail_below_threshold: false
+          publish_only_summary: false
+
+      # Publish Coverage Job Summary  # Optional
+      - name: Add Jacocoo report to workflow run summary
+        if: always()
+        run: |
+          echo "| Outcome | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "| --- | --- |" >> $GITHUB_STEP_SUMMARY
+          echo "| Code Coverage % | ${{ steps.jacoco_reporter.outputs.coverage_percentage }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| :heavy_check_mark: Number of Lines Covered | ${{ steps.jacoco_reporter.outputs.covered_lines }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| :x: Number of Lines Missed | ${{ steps.jacoco_reporter.outputs.missed_lines }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Total Number of Lines | ${{ steps.jacoco_reporter.outputs.total_lines }} |" >> $GITHUB_STEP_SUMMARY
