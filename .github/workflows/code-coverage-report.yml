@@ -5,9 +5,15 @@ on:
     secrets:
       GH_ACCESS_TOKEN:
         required: true
+    inputs:
+      ADD_DYNAMODB:
+        description: 'Should add dynamodb-test-lib?'
+        required: false
+        type: boolean
+        default: false
 
 jobs:
-  test:
+  run-code-coverage:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -31,6 +37,14 @@ jobs:
 
       - name: Grant execute permission for gradlew
         run: chmod +x ./project/gradlew
+
+      - name: Checkout dynamodb-test-lib
+        if: ${{ inputs.ADD_DYNAMODB == true }}
+        uses: actions/checkout@v4
+        with:
+          repository: tastyworks/tastyworks-dynamodb-test-lib-java
+          token: ${{ secrets.GH_ACCESS_TOKEN }}
+          path: tastyworks-dynamodb-test-lib-java
 
       - name: Gradle test
         working-directory: ./project
