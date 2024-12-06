@@ -44,7 +44,7 @@ jobs:
           coverage_results_path: ${{ github.workspace }}/project/build/reports/jacoco/testCoverage/testCoverage.xml
           coverage_report_name: Coverage
           coverage_report_title: JaCoCo
-          token: ${{ secrets.GH_ACCESS_TOKEN }}
+          github_token: ${{ secrets.GH_ACCESS_TOKEN }}
           skip_check_run: false
           fail_below_threshold: false
           publish_only_summary: false
