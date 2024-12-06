@@ -5,14 +5,28 @@ on:
     secrets:
       GH_ACCESS_TOKEN:
         required: true
+    inputs:
+      ADD_DYNAMODB:
+        description: 'Should add dynamodb-test-lib?'
+        required: false
+        type: boolean
+        default: false
 
 jobs:
-  test:
+  run-code-coverage:
     runs-on: ubuntu-latest
     steps:
       - uses: tastyworks/boulangerie-shared-github-workflows/.github/common-setup@main
         with:
           GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
+
+      - name: Checkout dynamodb-test-lib
+        if: ${{ inputs.ADD_DYNAMODB == true }}
+        uses: actions/checkout@v4
+        with:
+          repository: tastyworks/tastyworks-dynamodb-test-lib-java
+          token: ${{ secrets.GH_ACCESS_TOKEN }}
+          path: tastyworks-dynamodb-test-lib-java
 
       - name: Gradle test
         working-directory: ./project
@@ -26,7 +40,7 @@ jobs:
           coverage_results_path: ${{ github.workspace }}/project/build/reports/jacoco/testCoverage/testCoverage.xml
           coverage_report_name: Coverage
           coverage_report_title: JaCoCo
-          token: ${{ secrets.GH_ACCESS_TOKEN }}
+          github_token: ${{ secrets.GH_ACCESS_TOKEN }}
           skip_check_run: false
           fail_below_threshold: false
           publish_only_summary: false
