@@ -2,9 +2,6 @@ name: Code coverage report
 
 on:
   workflow_call:
-    secrets:
-      GH_ACCESS_TOKEN:
-        required: true
     inputs:
       ADD_DYNAMODB:
         description: 'Should add dynamodb-test-lib?'
