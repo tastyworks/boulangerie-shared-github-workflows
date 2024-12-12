@@ -1,6 +1,9 @@
 # deprecated (use check.yml instead)
 name: Pull Request Check
 
+permissions:
+  checks: write
+
 on:
   workflow_call:
     inputs:
