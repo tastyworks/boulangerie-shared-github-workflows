@@ -8,6 +8,11 @@ on:
         required: false
         type: boolean
         default: false
+      WITH_DOCKER:
+        description: Docker user
+        required: false
+        type: boolean
+        default: false
 
 jobs:
   run-code-coverage:
@@ -16,6 +21,9 @@ jobs:
       - uses: tastyworks/boulangerie-shared-github-workflows/.github/common-setup@main
         with:
           GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
+          WITH_DOCKER: ${{ inputs.WITH_DOCKER }}
+          DOCKER_USER: ${{ secrets.DOCKER_HUB_VAST_USER }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_HUB_VAST_PASSWORD }}
 
       - name: Checkout dynamodb-test-lib
         if: ${{ inputs.ADD_DYNAMODB == true }}
