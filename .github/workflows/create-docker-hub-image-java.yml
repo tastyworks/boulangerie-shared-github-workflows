@@ -16,7 +16,7 @@ on:
 
 jobs:
   should-continue:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Check if ref is a tag and not a snapshot
         id: check
@@ -43,7 +43,7 @@ jobs:
   push_to_docker_hub:
     needs: should-continue
     if: ${{ needs.should-continue.outputs.should-continue == 'true' }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: tastyworks/boulangerie-shared-github-workflows/.github/common-setup@main
         with:

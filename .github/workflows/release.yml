@@ -23,7 +23,7 @@ on:
 
 jobs:
   release:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
       - uses: tastyworks/boulangerie-shared-github-workflows/.github/common-setup@main
