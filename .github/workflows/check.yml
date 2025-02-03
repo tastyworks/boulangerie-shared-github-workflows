@@ -42,20 +42,9 @@ jobs:
           -PTW_MAVEN_ACCESS_SECRET_KEY=${{ secrets.AWS_MAVEN_ACCESS_SECRET_KEY }}
           check
 
-      - name: Gradle test coverage
+      - name: Gradle Test Coverage
         working-directory: ./project
         run: ./gradlew testCoverage
-
-      - run: ls -l ./
-        if: always()
-      - run: ls -l ./gradle-scripts
-        if: always()
-      - run: ls -l ./project/build/reports
-        if: always()
-      - run: ls -l ./project/build/reports/jacoco
-        if: always()
-      - run: ls -l ./project/build/reports/jacoco/testCoverage
-        if: always()
 
       - name: Generate Coverage Report
         if: always()
