@@ -13,6 +13,11 @@ on:
         required: false
         type: boolean
         default: false
+      WITH_DYNAMODB:
+        description: dynamodb-test-lib-java
+        required: false
+        type: boolean
+        default: false
     secrets:
       GH_ACCESS_TOKEN:
         required: true

@@ -23,7 +23,10 @@ inputs:
   DOCKER_PASSWORD:
     description: Docker password
     required: false
-
+  WITH_DYNAMODB:
+    description: dynamodb-test-lib-java
+    required: false
+    default: 'false'
 
 runs:
   using: 'composite'
@@ -67,5 +70,10 @@ runs:
       if: ${{ inputs.WITH_DOCKER == 'true' }}
       uses: docker/setup-qemu-action@v3
 
-
-
+    - name: Checkout dynamodb-test-lib
+      if: ${{ inputs.WITH_DYNAMODB == true }}
+      uses: actions/checkout@v4
+      with:
+        repository: tastyworks/tastyworks-dynamodb-test-lib-java
+        token: ${{ secrets.GH_ACCESS_TOKEN }}
+        path: tastyworks-dynamodb-test-lib-java
