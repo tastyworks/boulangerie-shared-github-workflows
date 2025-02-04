@@ -41,3 +41,29 @@ jobs:
           -PTW_MAVEN_ACCESS_KEY_ID=${{ secrets.AWS_MAVEN_ACCESS_KEY_ID }}
           -PTW_MAVEN_ACCESS_SECRET_KEY=${{ secrets.AWS_MAVEN_ACCESS_SECRET_KEY }}
           check
+
+      - name: Gradle Test Coverage
+        working-directory: ./project
+        run: ./gradlew testCoverage
+
+      - name: Generate Coverage Report
+        if: always()
+        id: jacoco_reporter
+        uses: PavanMudigonda/jacoco-reporter@v5.0
+        with:
+          coverage_results_path: ./project/build/reports/jacoco/testCoverage/testCoverage.xml
+          coverage_report_name: Coverage
+          coverage_report_title: JaCoCo
+          skip_check_run: false
+          fail_below_threshold: false
+          publish_only_summary: true
+
+      - name: Add Coverage report to workflow run summary
+        if: always()
+        run: |
+          echo "| Outcome | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "| --- | --- |" >> $GITHUB_STEP_SUMMARY
+          echo "| Code Coverage % | ${{ steps.jacoco_reporter.outputs.coverage_percentage }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| :heavy_check_mark: Number of Lines Covered | ${{ steps.jacoco_reporter.outputs.covered_lines }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| :x: Number of Lines Missed | ${{ steps.jacoco_reporter.outputs.missed_lines }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Total Number of Lines | ${{ steps.jacoco_reporter.outputs.total_lines }} |" >> $GITHUB_STEP_SUMMARY
