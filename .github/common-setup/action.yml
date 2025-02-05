@@ -45,6 +45,14 @@ runs:
         token: ${{ inputs.GH_ACCESS_TOKEN }}
         path: ${{ inputs.GRADLE_SCRIPTS_PATH }}
 
+    - name: Checkout dynamodb-test-lib
+      if: ${{ inputs.WITH_DYNAMODB == true }}
+      uses: actions/checkout@v4
+      with:
+        repository: tastyworks/tastyworks-dynamodb-test-lib-java
+        token: ${{ inputs.GH_ACCESS_TOKEN }}
+        path: tastyworks-dynamodb-test-lib-java
+
     - name: Read .java-version
       shell: bash
       run: |
@@ -69,11 +77,3 @@ runs:
     - name: Set up QEMU
       if: ${{ inputs.WITH_DOCKER == 'true' }}
       uses: docker/setup-qemu-action@v3
-
-    - name: Checkout dynamodb-test-lib
-      if: ${{ inputs.WITH_DYNAMODB == true }}
-      uses: actions/checkout@v4
-      with:
-        repository: tastyworks/tastyworks-dynamodb-test-lib-java
-        token: ${{ inputs.GH_ACCESS_TOKEN }}
-        path: tastyworks-dynamodb-test-lib-java
