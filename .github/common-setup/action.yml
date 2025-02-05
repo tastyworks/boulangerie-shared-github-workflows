@@ -46,7 +46,7 @@ runs:
         path: ${{ inputs.GRADLE_SCRIPTS_PATH }}
 
     - name: Checkout dynamodb-test-lib
-      if: ${{ inputs.WITH_DYNAMODB == true }}
+      if: ${{ inputs.WITH_DYNAMODB == 'true' }}
       uses: actions/checkout@v4
       with:
         repository: tastyworks/tastyworks-dynamodb-test-lib-java
