@@ -38,6 +38,7 @@ jobs:
           WITH_DOCKER: ${{ inputs.WITH_DOCKER }}
           DOCKER_USER: ${{ secrets.DOCKER_HUB_VAST_USER }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_HUB_VAST_PASSWORD }}
+          WITH_DYNAMODB: ${{ inputs.WITH_DYNAMODB }}
 
       - name: Gradle Check
         working-directory: ./project
