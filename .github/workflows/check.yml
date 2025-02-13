@@ -3,6 +3,10 @@ name: Check
 on:
   workflow_call:
     inputs:
+      runner:
+        required: false
+        type: string
+        default: 'ubuntu-22.04'
       GRADLE_SCRIPTS_PATH:
         description: 'Path to clone gradle-scripts into'
         type: string
@@ -28,7 +32,7 @@ on:
 
 jobs:
   check:
-    runs-on: ubuntu-22.04
+    runs-on: ${{ inputs.runner }}
 
     steps:
       - uses: tastyworks/boulangerie-shared-github-workflows/.github/common-setup@main
