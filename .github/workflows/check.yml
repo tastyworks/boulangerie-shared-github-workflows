@@ -37,7 +37,7 @@ jobs:
         include:
           - runs-on: ubuntu-22.04
             should-run: ${{ !inputs.WITH_SELF_HOSTED_RUNNER }}
-          - runs-on: ['self-hosted', 'arm64', 'staging']
+          - runs-on: [self-hosted, arm64, staging]
             should-run: ${{ inputs.WITH_SELF_HOSTED_RUNNER }}
     runs-on: ${{ matrix.runs-on }}
     if: ${{ matrix.should-run }}
