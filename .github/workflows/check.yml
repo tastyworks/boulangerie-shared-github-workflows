@@ -6,7 +6,7 @@ on:
       runner:
         required: false
         type: string
-        default: 'ubuntu-22.04'
+        default: "['ubuntu-22.04']"
       GRADLE_SCRIPTS_PATH:
         description: 'Path to clone gradle-scripts into'
         type: string
@@ -32,7 +32,7 @@ on:
 
 jobs:
   check:
-    runs-on: ${{ inputs.runner }}
+    runs-on: ${{ fromJSON(inputs.runner) }}
 
     steps:
       - uses: tastyworks/boulangerie-shared-github-workflows/.github/common-setup@main
