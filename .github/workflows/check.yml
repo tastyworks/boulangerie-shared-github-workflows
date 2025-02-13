@@ -18,7 +18,7 @@ on:
         required: false
         type: boolean
         default: false
-      USE_SELF_HOSTED_RUNNER:
+      WITH_SELF_HOSTED_RUNNER:
         required: false
         type: boolean
         default: false
@@ -36,9 +36,9 @@ jobs:
       matrix:
         include:
           - runs-on: ubuntu-22.04
-            should-run: ${{ !inputs.USE_SELF_HOSTED_RUNNER }}
+            should-run: ${{ !inputs.WITH_SELF_HOSTED_RUNNER }}
           - runs-on: ['self-hosted', 'arm64', 'staging']
-            should-run: ${{ inputs.USE_SELF_HOSTED_RUNNER }}
+            should-run: ${{ inputs.WITH_SELF_HOSTED_RUNNER }}
     runs-on: ${{ matrix.runs-on }}
     if: ${{ matrix.should-run }}
     steps:
