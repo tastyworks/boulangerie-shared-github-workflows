@@ -17,6 +17,10 @@ inputs:
     description: Whether or not to setup docker
     required: false
     default: 'false'
+  WITH_QEMU:
+    description: Whether or not to setup qemu for cross-platform docker builds
+    required: false
+    default: 'true'
   DOCKER_USER:
     description: Docker user
     required: false
@@ -75,5 +79,5 @@ runs:
         password: ${{ inputs.DOCKER_PASSWORD }}
 
     - name: Set up QEMU
-      if: ${{ inputs.WITH_DOCKER == 'true' }}
+      if: ${{ inputs.WITH_DOCKER == 'true' && inputs.WITH_QEMU == 'true' }}
       uses: docker/setup-qemu-action@v3

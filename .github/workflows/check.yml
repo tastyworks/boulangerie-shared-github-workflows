@@ -3,6 +3,10 @@ name: Check
 on:
   workflow_call:
     inputs:
+      runner:
+        required: false
+        type: string
+        default: "['ubuntu-22.04']"
       GRADLE_SCRIPTS_PATH:
         description: 'Path to clone gradle-scripts into'
         type: string
@@ -28,7 +32,7 @@ on:
 
 jobs:
   check:
-    runs-on: ubuntu-22.04
+    runs-on: ${{ fromJSON(inputs.runner) }}
 
     steps:
       - uses: tastyworks/boulangerie-shared-github-workflows/.github/common-setup@main
@@ -36,6 +40,7 @@ jobs:
           GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
           GRADLE_SCRIPTS_PATH: ${{ inputs.GRADLE_SCRIPTS_PATH }}
           WITH_DOCKER: ${{ inputs.WITH_DOCKER }}
+          WITH_QEMU: ${{ inputs.runner == "['ubuntu-22.04']" }}
           DOCKER_USER: ${{ secrets.DOCKER_HUB_VAST_USER }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_HUB_VAST_PASSWORD }}
           WITH_DYNAMODB: ${{ inputs.WITH_DYNAMODB }}
