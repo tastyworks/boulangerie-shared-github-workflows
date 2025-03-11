@@ -58,7 +58,6 @@ jobs:
         run: ./gradlew testCoverage
 
       - name: Generate Coverage Report
-        if: always()
         id: jacoco_reporter
         uses: PavanMudigonda/jacoco-reporter@v5.0
         with:
@@ -70,7 +69,6 @@ jobs:
           publish_only_summary: true
 
       - name: Add Coverage report to workflow run summary
-        if: always()
         run: |
           echo "| Outcome | Value |" >> $GITHUB_STEP_SUMMARY
           echo "| --- | --- |" >> $GITHUB_STEP_SUMMARY
