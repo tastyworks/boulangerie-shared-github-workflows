@@ -41,8 +41,9 @@ runs:
 
     - name: Build and push Docker image
       uses: docker/build-push-action@v5
+      working-directory: ./project
       with:
-        context: ./project/build/install/${{ steps.gradle-info.outputs.PROJECT_NAME }}
+        context: ./build/install/${{ steps.gradle-info.outputs.PROJECT_NAME }}
         platforms: linux/arm64
         push: true
         tags: "tastyworks/${{ steps.gradle-info.outputs.PROJECT_NAME }}:${{ inputs.VERSION_TAG }}"
