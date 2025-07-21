@@ -35,7 +35,7 @@ jobs:
     runs-on: ${{ fromJSON(inputs.runner) }}
 
     steps:
-      - uses: tastyworks/boulangerie-shared-github-workflows/.github/common-setup@main
+      - uses: tastyworks/boulangerie-shared-github-workflows/.github/common-setup@support-java-21
         with:
           GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
           GRADLE_SCRIPTS_PATH: ${{ inputs.GRADLE_SCRIPTS_PATH }}
