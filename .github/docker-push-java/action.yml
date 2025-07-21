@@ -31,7 +31,7 @@ runs:
       shell: bash
       working-directory: ./project
       run: |
-        ./gradlew clean build \
+        ./gradlew installDist \
           -Pversion=${{ inputs.VERSION_TAG }} \
           -PAWS_MAVEN_ACCESS_KEY_ID=${AWS_MAVEN_ACCESS_KEY_ID} \
           -PAWS_MAVEN_ACCESS_SECRET_KEY=${AWS_MAVEN_ACCESS_SECRET_KEY}
