@@ -35,6 +35,8 @@ runs:
           -Pversion=${{ inputs.VERSION_TAG }} \
           -PAWS_MAVEN_ACCESS_KEY_ID=${AWS_MAVEN_ACCESS_KEY_ID} \
           -PAWS_MAVEN_ACCESS_SECRET_KEY=${AWS_MAVEN_ACCESS_SECRET_KEY}
+        
+        cp Dockerfile ./project/build/install/${{ steps.gradle-info.outputs.PROJECT_NAME }}/Dockerfile
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
@@ -42,7 +44,7 @@ runs:
     - name: Build and push Docker image
       uses: docker/build-push-action@v5
       with:
-        context: ./project
+        context: ./project/build/install/${{ steps.gradle-info.outputs.PROJECT_NAME }
         platforms: linux/arm64
         push: true
         tags: "tastyworks/${{ steps.gradle-info.outputs.PROJECT_NAME }}:${{ inputs.VERSION_TAG }}"
