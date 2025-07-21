@@ -5,7 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="725ea7e3-21be-48ef-9479-404470057c89" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.github/docker-push-java/action.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/docker-push-java/action.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/workflows/continuous-release.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/continuous-release.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -74,7 +74,7 @@
       <workItem from="1709752137935" duration="77000" />
       <workItem from="1710355516096" duration="1556000" />
       <workItem from="1710447139243" duration="23000" />
-      <workItem from="1753126104572" duration="4843000" />
+      <workItem from="1753126104572" duration="4965000" />
     </task>
     <servers />
   </component>

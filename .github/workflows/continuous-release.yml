@@ -40,7 +40,7 @@ jobs:
           DOCKER_PASSWORD: ${{ secrets.DOCKER_HUB_VAST_PASSWORD }}
       
       - name: Build and push Docker image
-        uses: tastyworks/boulangerie-shared-github-workflows/.github/docker-push-java@stop-using-palantir-docker-plugin
+        uses: tastyworks/boulangerie-shared-github-workflows/.github/docker-push-java@main
         with:
           VERSION_TAG: ${{ needs.bump-version.outputs.new-tag }}
         env:
