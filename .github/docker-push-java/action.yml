@@ -2,45 +2,9 @@ name: Docker Build and Push Java
 description: Build and push Docker images for Java projects using Docker CLI
 
 inputs:
-  DOCKER_REGISTRY:
-    description: 'Docker registry URL (e.g., docker.io, 123456789.dkr.ecr.us-east-2.amazonaws.com)'
-    required: false
-    default: 'docker.io'
-  DOCKER_REPOSITORY:
-    description: 'Docker repository name (e.g., organization/image-name). If not provided, will use vast/{gradle-project-name}'
-    required: false
   VERSION_TAG:
     description: 'Version tag for the Docker image'
     required: true
-  DOCKERFILE_PATH:
-    description: 'Path to the Dockerfile'
-    required: false
-    default: './Dockerfile'
-  BUILD_CONTEXT:
-    description: 'Docker build context path'
-    required: false
-    default: '.'
-  BUILD_ARGS:
-    description: 'Additional build arguments as key=value pairs, one per line'
-    required: false
-    default: ''
-  PLATFORM:
-    description: 'Target platform for build (e.g., linux/amd64, linux/arm64)'
-    required: false
-    default: 'linux/amd64'
-  GRADLE_BUILD_ARGS:
-    description: 'Gradle build arguments for building the JAR before Docker build'
-    required: false
-    default: ''
-  AWS_MAVEN_ACCESS_KEY_ID:
-    description: 'AWS Maven access key ID'
-    required: false
-  AWS_MAVEN_ACCESS_SECRET_KEY:
-    description: 'AWS Maven access secret key'
-    required: false
-  GITHUB_TOKEN:
-    description: 'GitHub token for accessing private repositories'
-    required: false
 
 runs:
   using: 'composite'
@@ -67,104 +31,22 @@ runs:
       shell: bash
       working-directory: ./project
       run: |
-        # Build the project with Gradle
-        GRADLE_ARGS=""
-        
-        # Add version if provided
-        if [ -n "${{ inputs.VERSION_TAG }}" ]; then
-          GRADLE_ARGS="${GRADLE_ARGS} -Pversion=${{ inputs.VERSION_TAG }}"
-        fi
-        
-        # Add AWS Maven credentials if provided
-        if [ -n "${{ inputs.AWS_MAVEN_ACCESS_KEY_ID }}" ]; then
-          GRADLE_ARGS="${GRADLE_ARGS} -PAWS_MAVEN_ACCESS_KEY_ID=${{ inputs.AWS_MAVEN_ACCESS_KEY_ID }}"
-        fi
-        
-        if [ -n "${{ inputs.AWS_MAVEN_ACCESS_SECRET_KEY }}" ]; then
-          GRADLE_ARGS="${GRADLE_ARGS} -PAWS_MAVEN_ACCESS_SECRET_KEY=${{ inputs.AWS_MAVEN_ACCESS_SECRET_KEY }}"
-        fi
-        
-        # Add any additional gradle build args
-        if [ -n "${{ inputs.GRADLE_BUILD_ARGS }}" ]; then
-          GRADLE_ARGS="${GRADLE_ARGS} ${{ inputs.GRADLE_BUILD_ARGS }}"
-        fi
-        
-        echo "Running: ./gradlew clean build ${GRADLE_ARGS}"
-        ./gradlew clean build ${GRADLE_ARGS}
+        ./gradlew clean build \
+          -Pversion=${{ inputs.VERSION_TAG }} \
+          -PAWS_MAVEN_ACCESS_KEY_ID=${AWS_MAVEN_ACCESS_KEY_ID} \
+          -PAWS_MAVEN_ACCESS_SECRET_KEY=${AWS_MAVEN_ACCESS_SECRET_KEY}
 
-    - name: Prepare Docker build
-      id: docker-prep
-      shell: bash
-      working-directory: ./project
-      run: |
-        # Prepare Docker image name
-        DOCKER_REPOSITORY="${{ inputs.DOCKER_REPOSITORY }}"
-        
-        # If DOCKER_REPOSITORY is not provided, use vast/{project-name}
-        if [ -z "${DOCKER_REPOSITORY}" ]; then
-          DOCKER_REPOSITORY="vast/${{ steps.gradle-info.outputs.PROJECT_NAME }}"
-          echo "Using default repository: ${DOCKER_REPOSITORY}"
-        fi
-        
-        VERSION="${{ inputs.VERSION_TAG }}"
-        REGISTRY="${{ inputs.DOCKER_REGISTRY }}"
-        
-        # If registry is docker.io and repository already includes organization, don't prepend registry
-        if [[ "${REGISTRY}" == "docker.io" && "${DOCKER_REPOSITORY}" == *"/"* ]]; then
-          IMAGE_NAME="${DOCKER_REPOSITORY}"
-        else
-          # For ECR or other registries, prepend the registry URL
-          IMAGE_NAME="${REGISTRY}/${DOCKER_REPOSITORY}"
-        fi
-        
-        echo "IMAGE_NAME=${IMAGE_NAME}" >> $GITHUB_OUTPUT
-        echo "IMAGE_TAG=${IMAGE_NAME}:${VERSION}" >> $GITHUB_OUTPUT
-        echo "Docker image will be: ${IMAGE_NAME}:${VERSION}"
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
 
-    - name: Build Docker image
-      shell: bash
-      working-directory: ./project
-      run: |
-        # Change to build context directory
-        cd ${{ inputs.BUILD_CONTEXT }}
-        
-        # Prepare build args
-        BUILD_ARGS=""
-        
-        # Add GitHub token if provided
-        if [ -n "${{ inputs.GITHUB_TOKEN }}" ]; then
-          BUILD_ARGS="${BUILD_ARGS} --build-arg GITHUB_TOKEN=${{ inputs.GITHUB_TOKEN }}"
-        fi
-        
-        # Add AWS Maven credentials if provided
-        if [ -n "${{ inputs.AWS_MAVEN_ACCESS_KEY_ID }}" ]; then
-          BUILD_ARGS="${BUILD_ARGS} --build-arg AWS_MAVEN_ACCESS_KEY_ID=${{ inputs.AWS_MAVEN_ACCESS_KEY_ID }}"
-        fi
-        
-        if [ -n "${{ inputs.AWS_MAVEN_ACCESS_SECRET_KEY }}" ]; then
-          BUILD_ARGS="${BUILD_ARGS} --build-arg AWS_MAVEN_ACCESS_SECRET_KEY=${{ inputs.AWS_MAVEN_ACCESS_SECRET_KEY }}"
-        fi
-        
-        # Add custom build args if provided
-        if [ -n "${{ inputs.BUILD_ARGS }}" ]; then
-          while IFS= read -r arg; do
-            if [ -n "$arg" ]; then
-              BUILD_ARGS="${BUILD_ARGS} --build-arg ${arg}"
-            fi
-          done <<< "${{ inputs.BUILD_ARGS }}"
-        fi
-        
-        # Build the Docker image
-        echo "Building Docker image..."
-        docker build \
-          --platform ${{ inputs.PLATFORM }} \
-          -t ${{ steps.docker-prep.outputs.IMAGE_TAG }} \
-          -f ${{ inputs.DOCKERFILE_PATH }} \
-          ${BUILD_ARGS} \
-          .
-
-    - name: Push Docker image
-      shell: bash
-      run: |
-        echo "Pushing Docker image to registry..."
-        docker push ${{ steps.docker-prep.outputs.IMAGE_TAG }}
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v5
+      with:
+        context: ./project
+        platforms: linux/arm64
+        push: true
+        tags: "tastyworks/${{ steps.gradle-info.outputs.PROJECT_NAME }}:${{ inputs.VERSION_TAG }}"
+        build-args: |
+          GITHUB_TOKEN=${{ env.GH_ACCESS_TOKEN }}
+          AWS_MAVEN_ACCESS_KEY_ID=${{ env.AWS_MAVEN_ACCESS_KEY_ID }}
+          AWS_MAVEN_ACCESS_SECRET_KEY=${{ env.AWS_MAVEN_ACCESS_SECRET_KEY }}
