@@ -45,6 +45,39 @@ jobs:
           DOCKER_PASSWORD: ${{ secrets.DOCKER_HUB_VAST_PASSWORD }}
           WITH_DYNAMODB: ${{ inputs.WITH_DYNAMODB }}
 
+      - name: Check Docker connectivity
+        run: |
+          echo "Checking Docker environment..."
+
+          # Check if Docker is available
+          if command -v docker &> /dev/null; then
+            echo "✓ Docker command is available"
+          else
+            echo "✗ Docker command not found"
+            exit 0
+          fi
+
+          # Check Docker daemon connectivity
+          if docker version &> /dev/null; then
+            echo "✓ Docker daemon is responsive"
+          else
+            echo "✗ Cannot connect to Docker daemon"
+            exit 0
+          fi
+
+          # Check 172.17.0.1 (Docker bridge gateway)
+          echo "Checking Docker bridge network at 172.17.0.1..."
+          if ping -c 1 -W 2 172.17.0.1 &> /dev/null; then
+            echo "✓ Docker bridge network (172.17.0.1) is reachable"
+          else
+            echo "✗ Cannot reach Docker bridge network at 172.17.0.1"
+            echo "Note: This might be normal if Docker uses a different bridge IP"
+          fi
+
+          # Show Docker network info for debugging
+          echo "Docker network configuration:"
+          docker network inspect bridge --format '{{range .IPAM.Config}}{{.Gateway}}{{end}}' || true
+
       - name: Gradle Check
         working-directory: ./project
         run: >
