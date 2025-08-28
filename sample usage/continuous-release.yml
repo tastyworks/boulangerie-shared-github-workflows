@@ -1,0 +1,19 @@
+name: Continuously Release
+on:
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - 'src/test/**'        # Java test directories
+      - '*.md'               # Documentation files
+      - '.github/**'         # Workflow changes
+      - 'docs/**'            # Documentation directories
+
+jobs:
+  check:
+    uses: ./.github/workflows/main-check.yml
+    secrets: inherit
+  bump-version:
+    needs: check
+    uses: tastyworks/boulangerie-shared-github-workflows/.github/workflows/continuous-release.yml@main
+    secrets: inherit
