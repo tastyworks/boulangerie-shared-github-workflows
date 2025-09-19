@@ -15,11 +15,6 @@ on:
         required: true
 
 jobs:
-  check:
-    uses: ./.github/workflows/check.yml
-    secrets: inherit
-    with:
-      WITH_DOCKER: true
   bump-version:
     needs: check
     runs-on: ubuntu-latest
