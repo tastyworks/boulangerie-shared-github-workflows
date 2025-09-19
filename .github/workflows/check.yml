@@ -51,7 +51,7 @@ jobs:
           ./gradlew
           -PTW_MAVEN_ACCESS_KEY_ID=${{ secrets.AWS_MAVEN_ACCESS_KEY_ID }}
           -PTW_MAVEN_ACCESS_SECRET_KEY=${{ secrets.AWS_MAVEN_ACCESS_SECRET_KEY }}
-          check
+          check --info
 
       - name: Gradle Test Coverage
         working-directory: ./project
