@@ -16,7 +16,6 @@ on:
 
 jobs:
   bump-version:
-    needs: check
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
