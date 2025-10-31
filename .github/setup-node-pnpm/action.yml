@@ -1,0 +1,39 @@
+name: Setup Node
+description: setup-node and npm ci
+
+inputs:
+    GH_ACCESS_TOKEN:
+      description: github access token
+      required: true
+    node-version-file:
+      description: path to node version file
+      required: false
+      default: '.nvmrc'
+    working-directory:
+      description: path to package.json
+      required: false
+      default: '.'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v2
+      with:
+        version: 9
+        run_install: false
+
+    - name: Setup node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version-file: ${{ inputs.node-version-file }}
+        cache: 'pnpm'
+        registry-url: 'https://npm.pkg.github.com'
+        cache-dependency-path: ${{ inputs.working-directory }}
+
+    - name: Install dependencies
+      run: pnpm install --no-frozen-lockfile
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      env:
+        NODE_AUTH_TOKEN: ${{ inputs.GH_ACCESS_TOKEN }}
