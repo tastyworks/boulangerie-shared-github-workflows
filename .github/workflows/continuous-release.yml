@@ -39,7 +39,7 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_HUB_VAST_USER }}
           password: ${{ secrets.DOCKER_HUB_VAST_PASSWORD }}
-      - name: Push Docker AMD64
+      - name: Push Docker
         working-directory: ./project
         run: |
           sudo apt-get update
@@ -48,14 +48,4 @@ jobs:
             -Pversion=${{ needs.bump-version.outputs.new-tag }} \
             -PAWS_MAVEN_ACCESS_KEY_ID=${{ secrets.AWS_MAVEN_ACCESS_KEY_ID }} \
             -PAWS_MAVEN_ACCESS_SECRET_KEY=${{ secrets.AWS_MAVEN_ACCESS_SECRET_KEY }} \
-            -PdockerTargetPlatform=linux/amd64 \
-            dockerPush
-      - name: Push Docker ARM64
-        working-directory: ./project
-        run: |
-          ./gradlew \
-            -Pversion=${{ needs.bump-version.outputs.new-tag }} \
-            -PAWS_MAVEN_ACCESS_KEY_ID=${{ secrets.AWS_MAVEN_ACCESS_KEY_ID }} \
-            -PAWS_MAVEN_ACCESS_SECRET_KEY=${{ secrets.AWS_MAVEN_ACCESS_SECRET_KEY }} \
-            -PdockerTargetPlatform=linux/arm64 \
             dockerPush
